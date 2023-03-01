@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import Customer from '../src/classes/Customer';
 import sampleCustomerData from '../src/data/customer-data';
+import Booking from '../src/classes/Booking';
+import sampleBookingData from '../src/data/booking-data';
 
 describe('Customer', () => {
     let customer;
@@ -25,13 +27,17 @@ describe('Customer', () => {
         expect(customer.name).to.equal(sampleCustomerData[0].name);
     });
 
-    it('should start with no bookings', () => {
-        expect(customer.bookings).to.have.length(0)
+    it('should be able to get bookings', () => {
+        const bookings = customer.getBookings(sampleBookingData);
+        expect(bookings[0]).to.be.instanceOf(Booking);
+        expect(bookings).to.have.length(1);
+        expect(bookings[0].date).to.equal('2022/02/05');
     });
 
-    it('should be able to have bookings', () => {
-        customer.getBookings();
-        expect(customer.bookings).to.have.length(1)
+    it('should not be able to get the wrong bookings', () => {
+        customer = new Customer(sampleCustomerData[1])
+        const bookings = customer.getBookings(sampleBookingData);
+        expect(bookings).to.deep.equal([])
     });
 
-})
+});
