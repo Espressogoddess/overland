@@ -9,18 +9,27 @@ class Hotel {
     filterByDate(date) {
         const bookingsOnSelectedDate = this.bookings.filter(booking => booking.date === date);
 
-        const availableRoomsOnSelectedDate = this.rooms.filter(room => {
+        const filteredAvailableRooms = this.rooms.filter(room => {
             return bookingsOnSelectedDate.every(booking => {
                 return booking.roomNumber !== room.number;
             });
         });
-        if (!availableRoomsOnSelectedDate.length) {
+        if (!filteredAvailableRooms.length) {
             return;
         } else {
-            return availableRoomsOnSelectedDate;
+            return filteredAvailableRooms;
         }
     }
-    addBooking()
+    filterByRoomType(roomType, date) {
+        const availableRoomsOnSelectedDate = this.filterByDate(date);
+        const filteredAvailableRooms = availableRoomsOnSelectedDate
+            .filter(room => room.type === roomType);
+        if (!filteredAvailableRooms.length) {
+            return;
+        } else {
+            return filteredAvailableRooms;
+        }
+    }
 }
 
 export default Hotel;
