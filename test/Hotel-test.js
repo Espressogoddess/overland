@@ -3,6 +3,8 @@ import Room from '../src/classes/Room';
 import sampleRoomData from '../src/data/room-data';
 import sampleBookingData from '../src/data/booking-data';
 import Hotel from "../src/classes/Hotel";
+import Booking from '../src/classes/Booking';
+import sampleCustomerData from '../src/data/customer-data';
 
 describe('Hotel', () => {
     let hotel;
@@ -22,6 +24,11 @@ describe('Hotel', () => {
     it('should be able to instantiate Rooms', () => {
         expect(hotel.rooms[0]).to.be.an.instanceOf(Room);
         expect(hotel.rooms).to.have.lengthOf(7);
+    });
+
+    it('should be able to instantiate Bookings', () => {
+        expect(hotel.bookings[0]).to.be.an.instanceOf(Booking);
+        expect(hotel.bookings).to.have.lengthOf(12);
     });
 
     it('should be able to filter available rooms by date', () => {
@@ -61,5 +68,13 @@ describe('Hotel', () => {
         expect(availableRooms).to.have.lengthOf(1);
         expect(availableRooms[0].number).to.equal(6);
     });
+
+    it('should be able to add new bookings', () => {
+        expect(hotel.bookings).to.have.lengthOf(12);
+        hotel.addNewBooking(sampleRoomData[6], sampleCustomerData[4], "2023/04/20");
+        expect(hotel.bookings).to.have.lengthOf(13);
+        hotel.addNewBooking(sampleRoomData[6], sampleCustomerData[5], "2025/04/20");
+        expect(hotel.bookings).to.have.lengthOf(14);
+    })
 
 });
