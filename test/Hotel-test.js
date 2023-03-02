@@ -35,8 +35,31 @@ describe('Hotel', () => {
         expect(availableRooms[5].number).to.equal(7);
     });
 
+    it('should be able to filter available rooms by a different date', () => {
+        const availableRooms = hotel.filterByDate("2022/01/24");
+        expect(availableRooms).to.have.lengthOf(7);
+        expect(availableRooms[0].number).to.equal(1);
+        expect(availableRooms[1].number).to.equal(2);
+        expect(availableRooms[2].number).to.equal(3);
+        expect(availableRooms[3].number).to.equal(4);
+        expect(availableRooms[4].number).to.equal(5);
+        expect(availableRooms[5].number).to.equal(6);
+        expect(availableRooms[6].number).to.equal(7);
+    });
+
     it('should be able to filter available rooms by room type', () => {
-   
+        const availableRooms = hotel.filterByRoomType('single room', "2022/01/25");
+        expect(availableRooms).to.have.lengthOf(4);
+        expect(availableRooms[0].number).to.equal(3);
+        expect(availableRooms[1].number).to.equal(4);
+        expect(availableRooms[2].number).to.equal(5);
+        expect(availableRooms[3].number).to.equal(7);
+    });
+
+    it('should be able to filter available rooms by different room type', () => {
+        const availableRooms = hotel.filterByRoomType('junior suite', "2022/01/25");
+        expect(availableRooms).to.have.lengthOf(1);
+        expect(availableRooms[0].number).to.equal(6);
     });
 
 });
