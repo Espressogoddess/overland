@@ -1,8 +1,15 @@
 import './css/styles.css';
 import './images/sunburst.png';
+import Customer from './classes/Customer';
+import Room from './classes/Room';
+import Booking from './classes/Booking';
 
 const usersRoomsSection = document.querySelector('#user-booked-section');
 const bookRoomSection = document.querySelector('#book-room-section');
+
+let customer;
+const rooms = [];
+const bookings = [];
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
     .then(response => response.json());
@@ -22,5 +29,12 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
         return allData;
     })
     .then(allData => {
-
+        customer = new Customer(allData.customers[7]);
+        allData.rooms.forEach(room => {
+            rooms.push(new Room(room)) ;
+        });
+        allData.bookings.forEach(booking => {
+            bookings.push(new Booking(booking));
+        });
+        console.log(bookings)
     })
