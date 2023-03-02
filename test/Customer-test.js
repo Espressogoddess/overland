@@ -3,6 +3,7 @@ import Customer from '../src/classes/Customer';
 import sampleCustomerData from '../src/data/customer-data';
 import Booking from '../src/classes/Booking';
 import sampleBookingData from '../src/data/booking-data';
+import sampleRoomData from '../src/data/room-data';
 
 describe('Customer', () => {
     let customer;
@@ -31,6 +32,7 @@ describe('Customer', () => {
         const bookings = customer.getBookings(sampleBookingData);
         expect(bookings[0]).to.be.instanceOf(Booking);
         expect(bookings).to.have.length(1);
+        console.log(bookings)
         expect(bookings[0].date).to.equal('2022/02/05');
     });
 
@@ -38,6 +40,11 @@ describe('Customer', () => {
         customer = new Customer(sampleCustomerData[1])
         const bookings = customer.getBookings(sampleBookingData);
         expect(bookings).to.deep.equal([])
+    });
+
+    it('should be able to calculate total spent on bookings', () => {
+        expect(customer.getTotalSpent(sampleBookingData, sampleRoomData)).to.equal(477.38);
+        
     });
 
 });

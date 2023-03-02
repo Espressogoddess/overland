@@ -16,6 +16,22 @@ class Customer {
         }
         return bookings;
     }
+    getTotalSpent(bookingData, roomData) {
+        const bookings = this.getBookings(bookingData);
+        const price = bookings.reduce((acc, curr) => {
+            roomData.forEach(room => {
+                if (room.number === curr.roomNumber) {
+                    acc += room.costPerNight;
+                }
+            })
+            return acc;
+        }, 0)
+        if (!price) {
+            return;
+        } else {
+            return price;
+        }
+    }
 }
 
 export default Customer;
