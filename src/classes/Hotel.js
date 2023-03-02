@@ -30,6 +30,14 @@ class Hotel {
             return filteredAvailableRooms;
         }
     }
+    addNewBooking(selectedRoom, customer, date) {
+        this.bookings.push(new Booking({
+           "id": Date.now(),
+           "userID":  customer.id,
+           "date": date,
+            "roomNumber": selectedRoom.number
+        }));
+    }
 }
 
 export default Hotel;
