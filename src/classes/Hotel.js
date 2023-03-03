@@ -4,7 +4,8 @@ import Booking from "./Booking";
 class Hotel {
     constructor(roomData, bookingData) {
         this.rooms = roomData.map(room => new Room(room));
-        this.bookings = bookingData.map(booking => new Booking(booking))
+        debugger
+        this.bookings = bookingData.map(booking => new Booking(booking, this.rooms))
     }
     filterByDate(date) {
         const bookingsOnSelectedDate = this.bookings.filter(booking => booking.date === date);
