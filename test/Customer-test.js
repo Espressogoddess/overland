@@ -4,6 +4,7 @@ import sampleCustomerData from '../src/data/customer-data';
 import Booking from '../src/classes/Booking';
 import sampleBookingData from '../src/data/booking-data';
 import sampleRoomData from '../src/data/room-data';
+import customerData from '../src/data/customer-data';
 
 describe('Customer', () => {
     let customer;
@@ -32,7 +33,6 @@ describe('Customer', () => {
         const bookings = customer.getBookings(sampleBookingData);
         expect(bookings[0]).to.be.instanceOf(Booking);
         expect(bookings).to.have.length(1);
-        console.log(bookings)
         expect(bookings[0].date).to.equal('2022/02/05');
     });
 
@@ -44,7 +44,11 @@ describe('Customer', () => {
 
     it('should be able to calculate total spent on bookings', () => {
         expect(customer.getTotalSpent(sampleBookingData, sampleRoomData)).to.equal(477.38);
-        
+    });
+
+    it('should be able to get total with no bookings', () => {
+        customer = new Customer(sampleCustomerData[2]);
+        expect(customer.getTotalSpent(sampleBookingData, sampleRoomData)).to.equal(0);
     });
 
 });

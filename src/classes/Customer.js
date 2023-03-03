@@ -26,11 +26,7 @@ class Customer {
             })
             return acc;
         }, 0)
-        if (!price) {
-            return;
-        } else {
             return price;
-        }
     }
 }
 
