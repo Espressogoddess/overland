@@ -3,6 +3,8 @@ import Customer from '../src/classes/Customer';
 import sampleCustomerData from '../src/data/customer-data';
 import Booking from '../src/classes/Booking';
 import sampleBookingData from '../src/data/booking-data';
+import sampleRoomData from '../src/data/room-data';
+import customerData from '../src/data/customer-data';
 
 describe('Customer', () => {
     let customer;
@@ -38,6 +40,15 @@ describe('Customer', () => {
         customer = new Customer(sampleCustomerData[1])
         const bookings = customer.getBookings(sampleBookingData);
         expect(bookings).to.deep.equal([])
+    });
+
+    it('should be able to calculate total spent on bookings', () => {
+        expect(customer.getTotalSpent(sampleBookingData, sampleRoomData)).to.equal(477.38);
+    });
+
+    it('should be able to get total with no bookings', () => {
+        customer = new Customer(sampleCustomerData[2]);
+        expect(customer.getTotalSpent(sampleBookingData, sampleRoomData)).to.equal(0);
     });
 
 });
