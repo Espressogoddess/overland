@@ -3,8 +3,13 @@ html {
   font-family: serif;
 }
 
+:root {
+  --accent-color: rgb(192, 139, 121);
+}
+
 body {
   background: whitesmoke;
+  margin: 20px;
 }
 
 .logo {
@@ -17,7 +22,6 @@ body {
 }
 
 header {
-  width: 100%;
   justify-content: space-between;
   border-bottom: slategray 1px solid;
   align-items: flex-end;
@@ -28,7 +32,8 @@ button {
   width: 145px;
   margin-bottom: 7px;
   background-color: whitesmoke;
-  border: 1px slategray solid;
+  border: 1px var(--accent-color) solid;
+  color: var(--accent-color);
   border-radius: 2px;
   text-transform: uppercase;
 }
