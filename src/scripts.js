@@ -1,15 +1,15 @@
 import './css/styles.css';
 import './images/sunburst.png';
 import Customer from './classes/Customer';
-import Room from './classes/Room';
-import Booking from './classes/Booking';
+import Hotel from './classes/Hotel';
 
 const usersRoomsSection = document.querySelector('#user-booked-section');
 const bookRoomSection = document.querySelector('#book-room-section');
+const totalSpent = document.querySelector('#total-spent');
+const bookedTableBody = document.querySelector('#booking-tbody');
 
 let customer;
-const rooms = [];
-const bookings = [];
+let hotel;
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
     .then(response => response.json());
@@ -20,21 +20,24 @@ const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
 
 Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
     .then(data => {
-        console.log(data)
-        let allData = {
-            customers: data[0].customers,
-            bookings: data[1].bookings,
-            rooms: data[2].rooms
-        }
-        return allData;
-    })
-    .then(allData => {
-        customer = new Customer(allData.customers[7]);
-        allData.rooms.forEach(room => {
-            rooms.push(new Room(room)) ;
-        });
-        allData.bookings.forEach(booking => {
-            bookings.push(new Booking(booking));
-        });
-        console.log(bookings)
-    })
+        customer = new Customer(data[0].customers[7]);
+        hotel = new Hotel(data[2].rooms, data[1].bookings);
+        hotel.bookings.forEach(booking => booking.getRoom(hotel.rooms));
+        const customerBookings = customer.getBookings(hotel);
+        renderPage(customerBookings);
+});
+
+function renderPage(bookings) {
+    totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
+    bookedTableBody.innerHTML = '';
+    bookings.forEach(booking => {
+        debugger
+        bookedTableBody.innerHTML += `
+            <tr>
+                <td scope="row">${booking.date}</td>
+                <td>${booking.room.number}</td>
+                <td>${booking.room.type}</td>
+                <td>$${booking.room.costPerNight.toFixed(2)}</td>
+            </tr>`
+    });
+}
