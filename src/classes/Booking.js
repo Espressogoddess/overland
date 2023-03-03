@@ -6,10 +6,9 @@ class Booking {
         this.userID = bookingData.userID;
         this.date = bookingData.date;
         this.roomNumber = bookingData.roomNumber;
-        this.room = this.getRoom(rooms);
+        this.room = this.setRoom(rooms);
     }
-    //set or load room
-    getRoom(rooms) {
+    setRoom(rooms) {
         return rooms.find(room => room.number === this.roomNumber);
     }
 }

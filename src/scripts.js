@@ -22,7 +22,7 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
     .then(data => {
         customer = new Customer(data[0].customers[7]);
         hotel = new Hotel(data[2].rooms, data[1].bookings);
-        hotel.bookings.forEach(booking => booking.getRoom(hotel.rooms));
+        hotel.bookings.forEach(booking => booking.setRoom(hotel.rooms));
         const customerBookings = customer.getBookings(hotel);
         renderPage(customerBookings);
 });
