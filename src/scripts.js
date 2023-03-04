@@ -2,6 +2,8 @@ import './css/styles.css';
 import './images/sunburst.png';
 import Customer from './classes/Customer';
 import Hotel from './classes/Hotel';
+import { DateTime } from 'luxon';
+
 
 const usersRoomsSection = document.querySelector('#user-booked-section');
 const bookRoomSection = document.querySelector('#book-room-section');
@@ -22,8 +24,8 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
     .then(data => {
         customer = new Customer(data[0].customers[7]);
         hotel = new Hotel(data[2].rooms, data[1].bookings);
-        hotel.bookings.forEach(booking => booking.setRoom(hotel.rooms));
         const customerBookings = customer.getBookings(hotel);
+        console.log(customerBookings)
         renderPage(customerBookings);
 });
 
@@ -31,10 +33,9 @@ function renderPage(bookings) {
     totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
     bookedTableBody.innerHTML = '';
     bookings.forEach(booking => {
-        debugger
         bookedTableBody.innerHTML += `
             <tr>
-                <td scope="row">${booking.date}</td>
+                <td scope="row">${booking.formatDate()}</td>
                 <td>${booking.room.number}</td>
                 <td>${booking.room.type}</td>
                 <td>$${booking.room.costPerNight.toFixed(2)}</td>
