@@ -17,14 +17,8 @@ body {
   width: auto;
 }
 
-.d-flex {
-  display: flex;
-}
-
 header {
-  justify-content: space-between;
   border-bottom: slategray 1px solid;
-  align-items: flex-end;
 }
 
 button {
