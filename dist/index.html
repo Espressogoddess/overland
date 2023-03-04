@@ -11,18 +11,20 @@
 </head>
 
 <body>
-  <header class="d-flex">
-    <h1>Overlook</h1>
-    <button>Find Rooms</button>
-    <img src="./images/sunburst.png" class="logo" alt="sunburst">
+  <header>
+    <div class="container d-flex align-items-end justify-content-between">
+      <h1>Overlook</h1>
+      <button>Find Rooms</button>
+      <img src="./images/sunburst.png" class="logo" alt="sunburst">
+    </div>
   </header>
   <section id="user-booked-section" class="container">
     <div class="row mt-3">
-      <div class="col-4 order-2">
+      <div class="col-3 offset-1 order-2">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Total Spent</h5>
-            <p class="card-text" id="total-spent"></p>
+            <p class="card-text text-end fs-2" id="total-spent"></p>
           </div>
         </div>
       </div>
