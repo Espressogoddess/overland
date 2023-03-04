@@ -4,12 +4,10 @@ import Booking from "./Booking";
 class Hotel {
     constructor(roomData, bookingData) {
         this.rooms = roomData.map(room => new Room(room));
-        debugger
         this.bookings = bookingData.map(booking => new Booking(booking, this.rooms))
     }
     filterByDate(date) {
         const bookingsOnSelectedDate = this.bookings.filter(booking => booking.date === date);
-
         const filteredAvailableRooms = this.rooms.filter(room => {
             return bookingsOnSelectedDate.every(booking => {
                 return booking.roomNumber !== room.number;
@@ -37,7 +35,7 @@ class Hotel {
            "userID":  customer.id,
            "date": date,
             "roomNumber": selectedRoom.number
-        }));
+        }, this.rooms));
     }
 }
 
