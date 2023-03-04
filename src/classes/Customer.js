@@ -6,7 +6,7 @@ class Customer {
         this.name = customerData.name;
     }
     getBookings(hotel) {
-        return hotel.bookings.filter(foundBooking => foundBooking.userID === this.id);
+        return hotel.bookings.filter(foundBooking => foundBooking.userID === this.id).sort((a, b) => b.date - a.date);
     }
     getTotalSpent(hotel) {
         const bookings = this.getBookings(hotel);
