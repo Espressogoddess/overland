@@ -1,3 +1,5 @@
+@import '~js-datepicker/dist/datepicker.min.css';
+
 html {
   width: 100%;
   font-family: serif;
@@ -31,3 +33,4 @@ button {
   border-radius: 2px;
   text-transform: uppercase;
 }
+
