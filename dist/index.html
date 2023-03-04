@@ -12,14 +12,18 @@
 
 <body>
   <header>
-    <div class="container d-flex align-items-end justify-content-between">
+    <div class="container mb-5 d-flex align-items-end justify-content-between">
       <h1>Overlook</h1>
-      <button>Find Rooms</button>
+      <form id="select-a-date">
+        <label for="date-selection">Select A Date</label>
+        <input autocomplete="off" id="date-selection" type="text">
+        <button type="submit">Find Rooms</button>
+      </form>
       <img src="./images/sunburst.png" class="logo" alt="sunburst">
     </div>
   </header>
   <section id="user-booked-section" class="container">
-    <div class="row mt-3">
+    <div class="row mt-5">
       <div class="col-3 offset-1 order-2">
         <div class="card">
           <div class="card-body">
