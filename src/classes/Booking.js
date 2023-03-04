@@ -1,18 +1,19 @@
-import Room from './Room';
+import { DateTime } from 'luxon';
 
 class Booking {
-    constructor(bookingData) {
+    constructor(bookingData, rooms) {
         this.id = bookingData.id;
         this.userID = bookingData.userID;
         this.date = bookingData.date;
         this.roomNumber = bookingData.roomNumber;
+        this.room = this.setRoom(rooms);
+        this.dateInstance =  DateTime.fromFormat(this.date, 'yyyy/MM/dd')
     }
-    getRoom(rooms) {
-        const room = rooms.find(room => room.number === this.roomNumber)
-        if (!room) {
-            return
-        }
-        return new Room(room)
+    setRoom(rooms) {
+        return rooms.find(room => room.number === this.roomNumber);
+    }
+    formatDate() {
+        return this.dateInstance.toLocaleString(DateTime.DATE_MED);
     }
 }
 export default Booking;
