@@ -39,7 +39,7 @@ class Hotel {
         }, this.rooms));
     }
     getSelectedRoom(roomNumber) {
-        return this.rooms.find(room => room.number === parseInt(roomNumber));
+        return this.rooms.find(room => room.number === roomNumber);
     }
 }
 
