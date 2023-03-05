@@ -30,12 +30,16 @@ class Hotel {
         }
     }
     addNewBooking(selectedRoom, customer, date) {
+        console.log(selectedRoom)
         this.bookings.push(new Booking({
            "id": Date.now(),
            "userID":  customer.id,
            "date": date,
             "roomNumber": selectedRoom.number
         }, this.rooms));
+    }
+    getSelectedRoom(roomNumber) {
+        return this.rooms.find(room => room.number === parseInt(roomNumber));
     }
 }
 
