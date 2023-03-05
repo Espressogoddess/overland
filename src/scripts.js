@@ -12,6 +12,7 @@ const bookedTableBody = document.querySelector('#booking-tbody');
 const dateForm = document.querySelector('#select-a-date');
 const availableRoomsSection = document.querySelector('#available-rooms');
 const availableRoomSectionTitle = document.querySelector('#room-avail-title');
+const backButton = document.querySelector('#back-button');
 
 let customer;
 let hotel;
@@ -29,19 +30,38 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
     .then(data => {
         customer = new Customer(data[0].customers[7]);
         hotel = new Hotel(data[2].rooms, data[1].bookings);
-        const customerBookings = customer.getBookings(hotel);
-        renderPage(customerBookings);
+        renderPage(customer.getBookings(hotel));
     });
+
+backButton.addEventListener('click', () => {
+    currentView = 'dashboard';
+    renderPage(customer.getBookings(hotel));
+});
 
 dateForm.addEventListener('submit', (event) => {
     event.preventDefault();
     currentView = 'book';
-    const availableRooms = hotel.filterByDate(selectedDate);
-    renderPage(availableRooms);
-})
+    renderPage(hotel.filterByDate(selectedDate));
+});
+
+availableRoomsSection.addEventListener('click', (event) => {
+    if (event.target.dataset.roomNumber) {
+        const roomNumber = event.target.dataset.roomNumber;
+        currentView = 'dashboard';
+        hotel.addNewBooking(hotel.getSelectedRoom(roomNumber), customer, selectedDate);
+        //if successfully booked show success page
+        //if not show error
+        setTimeout(renderPage, 4000, customer.getBookings(hotel))
+    } else {
+        return
+    }
+});
+
 
 function renderPage(bookingsOrRooms) {
     if (currentView === 'dashboard') {
+        userDashboard.classList.remove('hidden');
+        bookRoomSection.classList.add('hidden');
         totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
         bookedTableBody.innerHTML = '';
         bookingsOrRooms.forEach(booking => {
@@ -57,7 +77,10 @@ function renderPage(bookingsOrRooms) {
         userDashboard.classList.add('hidden');
         bookRoomSection.classList.remove('hidden');
         const availableRooms = hotel.filterByDate(selectedDate);
-        const formattedDate = DateTime.fromFormat(selectedDate, 'yyyy/MM/dd').toLocaleString(DateTime.DATE_MED)
+        const formattedDate = DateTime
+            .fromFormat(selectedDate, 'yyyy/MM/dd')
+            .toLocaleString(DateTime.DATE_MED);
+
         if (availableRooms.length) {
             availableRoomSectionTitle.innerText = `Available Rooms on ${formattedDate}`;
             availableRoomsSection.innerHTML = '';
