@@ -2,9 +2,7 @@ import './css/styles.css';
 import './images/sunburst.png';
 import Customer from './classes/Customer';
 import Hotel from './classes/Hotel';
-import {
-    DateTime
-} from 'luxon';
+import { DateTime } from 'luxon';
 import datepicker from 'js-datepicker';
 
 const userDashboard = document.querySelector('#user-booked-section');
@@ -15,15 +13,24 @@ const dateForm = document.querySelector('#select-a-date');
 const availableRoomsSection = document.querySelector('#available-rooms');
 const availableRoomSectionTitle = document.querySelector('#room-avail-title');
 const backButton = document.querySelector('#back-button');
-const confirmationTitle = document.querySelector('#confirmation-title');
 const confirmationSection = document.querySelector('#confirmation-section');
 const resetButton = document.querySelector('#reset-button');
+const radioButtons = document.querySelector('#radio-buttons');
+const dateInput = document.querySelector('#date-selection');
+const picker = datepicker('#date-selection', {
+    minDate: new Date(),
+    onSelect: (instance, date) => {
+        selectedDate = DateTime.fromJSDate(date).toISODate().split('-').join('/');
+    }
+});
+
+picker.calendarContainer.style.setProperty('font-size', '.85rem');
 
 let customer;
 let hotel;
 let selectedDate;
 let currentView = 'dashboard';
-let confirmationBookingId;
+let filterTerm = '';
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
     .then(response => response.json());
@@ -36,24 +43,35 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
     .then(data => {
         customer = new Customer(data[0].customers[7]);
         hotel = new Hotel(data[2].rooms, data[1].bookings);
-        renderPage();
+        renderPage(filterTerm);
     });
 
 backButton.addEventListener('click', () => {
     currentView = 'dashboard';
-    renderPage();
+    filterTerm = '';
+    selectedDate = '';
+    dateInput.value = '';
+    renderPage(filterTerm);
 });
 
 dateForm.addEventListener('submit', (event) => {
     event.preventDefault();
     currentView = 'book';
-    renderPage();
+    renderPage(filterTerm);
 });
 
 resetButton.addEventListener('click', () => {
     const radios = document.getElementsByName("flexRadioDefault");
     radios.forEach(radio => radio.checked = false);
+    renderPage(filterTerm);
 });
+
+radioButtons.addEventListener('change', (event) => {
+    if (event.target.value) {
+        const filterTerm = event.target.value;
+        renderPage(filterTerm);
+    }
+})
 
 availableRoomsSection.addEventListener('click', (event) => {
     if (event.target.dataset.roomNumber) {
@@ -75,40 +93,33 @@ availableRoomsSection.addEventListener('click', (event) => {
                 if (data.message.includes('success')) {
                     hotel.addNewBooking(data.newBooking);
                     currentView = 'confirmation';
-                    renderPage()
+                    filterTerm = '';
+                    selectedDate = '';
+                    dateInput.value = '';
+                    renderPage(filterTerm)
                 }
             })
         //add error page to try again if not
         setTimeout(() => {
             currentView = 'dashboard';
-            renderPage();
+            renderPage(filterTerm);
         }, 4000)
     } else {
         return
     }
 });
 
-
-function renderPage() {
+function renderPage(filterTerm) {
     if (currentView === 'dashboard') {
         updateView(confirmationSection, bookRoomSection, userDashboard);
         renderDashboard();
     } else if (currentView === 'book') {
         updateView(userDashboard, confirmationSection, bookRoomSection);
-        renderBooking();
+        renderBookingPage(filterTerm);
     } else if (currentView === 'confirmation') {
         updateView(userDashboard, bookRoomSection, confirmationSection);
     }
 }
-
-const picker = datepicker('#date-selection', {
-    minDate: new Date(),
-    onSelect: (instance, date) => {
-        selectedDate = DateTime.fromJSDate(date).toISODate().split('-').join('/');
-    }
-});
-
-picker.calendarContainer.style.setProperty('font-size', '.85rem');
 
 function renderDashboard() {
     const bookings = customer.getBookings(hotel)
@@ -125,8 +136,13 @@ function renderDashboard() {
     });
 }
 
-function renderBooking() {
-    const availableRooms = hotel.filterByDate(selectedDate);
+function renderBookingPage(filterTerm) {
+    let availableRooms;
+    if (filterTerm) {
+        availableRooms = hotel.filterByRoomType(filterTerm, selectedDate);
+    } else {
+        availableRooms = hotel.filterByDate(selectedDate);
+    }
     const formattedDate = DateTime
         .fromFormat(selectedDate, 'yyyy/MM/dd')
         .toLocaleString(DateTime.DATE_MED);
