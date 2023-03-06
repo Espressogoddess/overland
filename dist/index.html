@@ -56,17 +56,53 @@
   <section id="book-room-section" class="container hidden">
     <div class="row mt-4">
       <div class=" d-flex flex-row justify-content-between">
-        <button id="back-button">Back</button>
+        <div class="d-flex flex-column">
+          <div>
+            <button id="back-button">Back</button>
+          </div>
+          <div id="radio-buttons">
+            <div class=" radio-buttons-2 d-flex">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="residential-suite" unchecked>
+                <label class="form-check-label" for="residential-suite">
+                  residential suite
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="junior suite" unchecked>
+                <label class="form-check-label" for="junior suite">
+                  junior suite
+                </label>
+              </div>
+            </div>
+            <div class=" radio-buttons-2 d-flex">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="suite" unchecked>
+                <label class="form-check-label" for="suite">
+                  suite
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="single-room" unchecked>
+                <label class="form-check-label" for="single-room">
+                  single room
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button id="reset-button" class="small-button white-bkgd me-2">reset type</button>
+          </div>
+        </div>
         <h2 id="room-avail-title"></h2>
       </div>
-    </div>
-    <div class="row mt-4 g-4" id="available-rooms">
-    </div>
+      <div class="row mt-4 g-4" id="available-rooms">
+      </div>
 
   </section>
   <section id="confirmation-section" class="container hidden">
     <div class="row mt-4">
-      <h2 id="confirmation-title"></h2>
+      <h2 id="confirmation-title">Congrats, your booking was successful</h2>
     </div>
   </section>
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script> -->
