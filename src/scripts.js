@@ -2,7 +2,9 @@ import './css/styles.css';
 import './images/sunburst.png';
 import Customer from './classes/Customer';
 import Hotel from './classes/Hotel';
-import { DateTime } from 'luxon';
+import {
+    DateTime
+} from 'luxon';
 import datepicker from 'js-datepicker';
 
 const userDashboard = document.querySelector('#user-booked-section');
@@ -17,6 +19,8 @@ const confirmationSection = document.querySelector('#confirmation-section');
 const resetButton = document.querySelector('#reset-button');
 const radioButtons = document.querySelector('#radio-buttons');
 const dateInput = document.querySelector('#date-selection');
+const errorSection = document.querySelector('#error-page');
+const radios = document.getElementsByName("flexRadioDefault");
 const picker = datepicker('#date-selection', {
     minDate: new Date(),
     onSelect: (instance, date) => {
@@ -44,13 +48,17 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
         customer = new Customer(data[0].customers[7]);
         hotel = new Hotel(data[2].rooms, data[1].bookings);
         renderPage(roomTypeFilter);
+    })
+    .catch(error => {
+        renderErrorPage()
     });
 
 backButton.addEventListener('click', () => {
     currentView = 'dashboard';
     roomTypeFilter = '';
     selectedDate = '';
-    dateInput.value = '';
+    picker.setDate();
+    radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
 
@@ -61,7 +69,6 @@ dateForm.addEventListener('submit', (event) => {
 });
 
 resetButton.addEventListener('click', () => {
-    const radios = document.getElementsByName("flexRadioDefault");
     radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
@@ -95,15 +102,18 @@ availableRoomsSection.addEventListener('click', (event) => {
                     currentView = 'confirmation';
                     roomTypeFilter = '';
                     selectedDate = '';
-                    dateInput.value = '';
-                    renderPage(roomTypeFilter)
+                    picker.setDate();
+                    renderPage(roomTypeFilter);
+                    setTimeout(() => {
+                        radios.forEach(radio => radio.checked = false);
+                        currentView = 'dashboard';
+                        renderPage(roomTypeFilter);
+                    }, 2500)
                 }
             })
-        //add error page to try again if not
-        setTimeout(() => {
-            currentView = 'dashboard';
-            renderPage(roomTypeFilter);
-        }, 4000)
+            .catch(error => {
+                availableRoomSectionTitle.innerText = 'Oops, it looks like there was an error, please try booking again';
+            })
     } else {
         return
     }
@@ -146,7 +156,7 @@ function renderBookingPage(roomTypeFilter) {
     const formattedDate = DateTime
         .fromFormat(selectedDate, 'yyyy/MM/dd')
         .toLocaleString(DateTime.DATE_MED);
-    if (availableRooms.length) {
+    if (availableRooms && availableRooms.length) {
         availableRoomSectionTitle.innerText = `Available Rooms on ${formattedDate}`;
         availableRoomsSection.innerHTML = '';
         availableRooms.forEach(room => {
@@ -170,7 +180,8 @@ function renderBookingPage(roomTypeFilter) {
         </div>`;
         })
     } else {
-        availableRoomSectionTitle.innerText = `Sorry! There are not any available rooms on ${formattedDate}`;
+        availableRoomSectionTitle.innerText = `Sorry! There are not any available rooms of that type on ${formattedDate}`;
+        availableRoomsSection.innerHTML = '';
     }
 }
 
@@ -178,4 +189,9 @@ function updateView(elementToRemove1, elementToRemove2, elementToShow) {
     elementToRemove1.classList.add('hidden');
     elementToRemove2.classList.add('hidden');
     elementToShow.classList.remove('hidden');
+}
+
+function renderErrorPage() {
+    errorSection.classList.remove('hidden');
+    userDashboard.classList.add('hidden');
 }
