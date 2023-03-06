@@ -2,7 +2,9 @@ import './css/styles.css';
 import './images/sunburst.png';
 import Customer from './classes/Customer';
 import Hotel from './classes/Hotel';
-import { DateTime } from 'luxon';
+import {
+    DateTime
+} from 'luxon';
 import datepicker from 'js-datepicker';
 
 const userDashboard = document.querySelector('#user-booked-section');
@@ -58,26 +60,25 @@ availableRoomsSection.addEventListener('click', (event) => {
         const roomNumber = parseInt(event.target.dataset.roomNumber);
         currentView = 'dashboard';
         fetch('http://localhost:3001/api/v1/bookings', {
-            method: 'POST',
-            body: JSON.stringify({ 
-                "userID": customer.id,
-                "date": selectedDate,
-                "roomNumber": roomNumber
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+                method: 'POST',
+                body: JSON.stringify({
+                    "userID": customer.id,
+                    "date": selectedDate,
+                    "roomNumber": roomNumber
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.message.includes('success')) {
                     hotel.addNewBooking(data.newBooking);
                     currentView = 'confirmation';
-                    renderPage() 
+                    renderPage()
                 }
             })
-            //add success page if successful post
-            //add error page to try again if not
+        //add error page to try again if not
         setTimeout(() => {
             currentView = 'dashboard';
             renderPage();
@@ -90,34 +91,50 @@ availableRoomsSection.addEventListener('click', (event) => {
 
 function renderPage() {
     if (currentView === 'dashboard') {
-        userDashboard.classList.remove('hidden');
-        bookRoomSection.classList.add('hidden');
-        confirmationSection.classList.add('hidden');
-        const bookings = customer.getBookings(hotel)
-        totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
-        bookedTableBody.innerHTML = '';
-        bookings.forEach(booking => {
-            bookedTableBody.innerHTML += `
+        updateView(confirmationSection, bookRoomSection, userDashboard);
+        renderDashboard();
+    } else if (currentView === 'book') {
+        updateView(userDashboard, confirmationSection, bookRoomSection);
+        renderBooking();
+    } else if (currentView === 'confirmation') {
+        updateView(userDashboard, bookRoomSection, confirmationSection);
+    }
+}
+
+const picker = datepicker('#date-selection', {
+    minDate: new Date(),
+    onSelect: (instance, date) => {
+        selectedDate = DateTime.fromJSDate(date).toISODate().split('-').join('/');
+    }
+});
+
+picker.calendarContainer.style.setProperty('font-size', '.85rem');
+
+function renderDashboard() {
+    const bookings = customer.getBookings(hotel)
+    totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
+    bookedTableBody.innerHTML = '';
+    bookings.forEach(booking => {
+        bookedTableBody.innerHTML += `
             <tr>
                 <td scope="row">${booking.formatDate()}</td>
                 <td>${booking.room.number}</td>
                 <td>${booking.room.type}</td>
                 <td>$${booking.room.costPerNight.toFixed(2)}</td>
             </tr>`;
-        });
-    } else if (currentView === 'book') {
-        userDashboard.classList.add('hidden');
-        bookRoomSection.classList.remove('hidden');
-        confirmationSection.classList.add('hidden');
-        const availableRooms = hotel.filterByDate(selectedDate);
-        const formattedDate = DateTime
-            .fromFormat(selectedDate, 'yyyy/MM/dd')
-            .toLocaleString(DateTime.DATE_MED);
-        if (availableRooms.length) {
-            availableRoomSectionTitle.innerText = `Available Rooms on ${formattedDate}`;
-            availableRoomsSection.innerHTML = '';
-            availableRooms.forEach(room => {
-                availableRoomsSection.innerHTML += `
+    });
+}
+
+function renderBooking() {
+    const availableRooms = hotel.filterByDate(selectedDate);
+    const formattedDate = DateTime
+        .fromFormat(selectedDate, 'yyyy/MM/dd')
+        .toLocaleString(DateTime.DATE_MED);
+    if (availableRooms.length) {
+        availableRoomSectionTitle.innerText = `Available Rooms on ${formattedDate}`;
+        availableRoomsSection.innerHTML = '';
+        availableRooms.forEach(room => {
+            availableRoomsSection.innerHTML += `
         <div class="col-3">
         <div class="card">
           <div class="card-body">
@@ -135,21 +152,14 @@ function renderPage() {
           </div>
         </div>
         </div>`;
-            })
-        } else {
-            availableRoomSectionTitle.innerText = `Sorry! There are not any available rooms on ${formattedDate}`;
-        }
-    } else if (currentView === 'confirmation') {
-        confirmationSection.classList.remove('hidden');
-        bookRoomSection.classList.add('hidden');
-        userDashboard.classList.add('hidden');
+        })
+    } else {
+        availableRoomSectionTitle.innerText = `Sorry! There are not any available rooms on ${formattedDate}`;
     }
 }
 
-const picker = datepicker('#date-selection', {
-    minDate: new Date(), 
-    onSelect: (instance, date) => {
-        selectedDate = DateTime.fromJSDate(date).toISODate().split('-').join('/');
-    }
-});
-picker.calendarContainer.style.setProperty('font-size', '.85rem');
+function updateView(elementToRemove1, elementToRemove2, elementToShow) {
+    elementToRemove1.classList.add('hidden');
+    elementToRemove2.classList.add('hidden');
+    elementToShow.classList.remove('hidden');
+}
