@@ -15,11 +15,13 @@ const availableRoomSectionTitle = document.querySelector('#room-avail-title');
 const backButton = document.querySelector('#back-button');
 const confirmationTitle = document.querySelector('#confirmation-title');
 const confirmationSection = document.querySelector('#confirmation-section');
+const resetButton = document.querySelector('#reset-button');
 
 let customer;
 let hotel;
 let selectedDate;
 let currentView = 'dashboard';
+let confirmationBookingId;
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
     .then(response => response.json());
@@ -46,11 +48,15 @@ dateForm.addEventListener('submit', (event) => {
     renderPage();
 });
 
+resetButton.addEventListener('click', () => {
+    const radios = document.getElementsByName("flexRadioDefault");
+    radios.forEach(radio => radio.checked = false);
+});
+
 availableRoomsSection.addEventListener('click', (event) => {
     if (event.target.dataset.roomNumber) {
         const roomNumber = parseInt(event.target.dataset.roomNumber);
         currentView = 'dashboard';
-        hotel.addNewBooking(hotel.getSelectedRoom(roomNumber), customer, selectedDate);
         fetch('http://localhost:3001/api/v1/bookings', {
             method: 'POST',
             body: JSON.stringify({ 
@@ -65,8 +71,7 @@ availableRoomsSection.addEventListener('click', (event) => {
             .then(response => response.json())
             .then(data => {
                 if (data.message.includes('success')) {
-                    console.log(data.newBooking.id)
-                    //use ^ to look up booking and render details to the page in render fn
+                    hotel.addNewBooking(data.newBooking);
                     currentView = 'confirmation';
                     renderPage() 
                 }
@@ -108,7 +113,6 @@ function renderPage() {
         const formattedDate = DateTime
             .fromFormat(selectedDate, 'yyyy/MM/dd')
             .toLocaleString(DateTime.DATE_MED);
-
         if (availableRooms.length) {
             availableRoomSectionTitle.innerText = `Available Rooms on ${formattedDate}`;
             availableRoomsSection.innerHTML = '';
@@ -139,7 +143,6 @@ function renderPage() {
         confirmationSection.classList.remove('hidden');
         bookRoomSection.classList.add('hidden');
         userDashboard.classList.add('hidden');
-        confirmationTitle.innerText = 'Yeah';
     }
 }
 
