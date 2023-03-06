@@ -27,6 +27,7 @@ const picker = datepicker('#date-selection', {
         selectedDate = DateTime.fromJSDate(date).toISODate().split('-').join('/');
     }
 });
+const dashboardTitle = document.querySelector('#booking-table-title');
 
 picker.calendarContainer.style.setProperty('font-size', '.85rem');
 
@@ -134,16 +135,20 @@ function renderPage(roomTypeFilter) {
 function renderDashboard() {
     const bookings = customer.getBookings(hotel)
     totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
-    bookedTableBody.innerHTML = '';
-    bookings.forEach(booking => {
-        bookedTableBody.innerHTML += `
-            <tr>
-                <td scope="row">${booking.formatDate()}</td>
-                <td>${booking.room.number}</td>
-                <td>${booking.room.type}</td>
-                <td>$${booking.room.costPerNight.toFixed(2)}</td>
-            </tr>`;
-    });
+    if (bookings && bookings.length) {
+        bookedTableBody.innerHTML = '';
+        bookings.forEach(booking => {
+            bookedTableBody.innerHTML += `
+                <tr>
+                    <td scope="row">${booking.formatDate()}</td>
+                    <td>${booking.room.number}</td>
+                    <td>${booking.room.type}</td>
+                    <td>$${booking.room.costPerNight.toFixed(2)}</td>
+                </tr>`;
+        });
+    } else {
+        dashboardTitle.innerText = 'Sorry, you don\t have any bookings yet';
+    }
 }
 
 function renderBookingPage(roomTypeFilter) {
