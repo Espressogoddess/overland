@@ -49,3 +49,19 @@ button {
 input {
   height: 46px;
 }
+
+.form-check {
+  width: 145px;
+}
+
+.wide-button {
+  width: 200px;
+}
+
+.white-bkgd {
+  background-color: var(--main-color);
+}
+
+.small-txt {
+  font-size: small;
+}
