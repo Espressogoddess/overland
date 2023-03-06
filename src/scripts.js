@@ -57,7 +57,7 @@ backButton.addEventListener('click', () => {
     currentView = 'dashboard';
     roomTypeFilter = '';
     selectedDate = '';
-    dateInput.value = '';
+    picker.setDate();
     radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
@@ -102,7 +102,7 @@ availableRoomsSection.addEventListener('click', (event) => {
                     currentView = 'confirmation';
                     roomTypeFilter = '';
                     selectedDate = '';
-                    dateInput.value = '';
+                    picker.setDate();
                     renderPage(roomTypeFilter);
                     setTimeout(() => {
                         radios.forEach(radio => radio.checked = false);
