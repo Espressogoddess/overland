@@ -58,6 +58,7 @@ backButton.addEventListener('click', () => {
     roomTypeFilter = '';
     selectedDate = '';
     dateInput.value = '';
+    radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
 
@@ -155,7 +156,6 @@ function renderBookingPage(roomTypeFilter) {
     const formattedDate = DateTime
         .fromFormat(selectedDate, 'yyyy/MM/dd')
         .toLocaleString(DateTime.DATE_MED);
-        console.log(availableRooms)
     if (availableRooms && availableRooms.length) {
         availableRoomSectionTitle.innerText = `Available Rooms on ${formattedDate}`;
         availableRoomsSection.innerHTML = '';
