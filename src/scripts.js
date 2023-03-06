@@ -5,7 +5,6 @@ import Hotel from './classes/Hotel';
 import {
     DateTime
 } from 'luxon';
-import datepicker from 'js-datepicker';
 
 const userDashboard = document.querySelector('#user-booked-section');
 const bookRoomSection = document.querySelector('#book-room-section');
@@ -21,15 +20,12 @@ const radioButtons = document.querySelector('#radio-buttons');
 const dateInput = document.querySelector('#date-selection');
 const errorSection = document.querySelector('#error-page');
 const radios = document.getElementsByName("flexRadioDefault");
-const picker = datepicker('#date-selection', {
-    minDate: new Date(),
-    onSelect: (instance, date) => {
-        selectedDate = DateTime.fromJSDate(date).toISODate().split('-').join('/');
-    }
-});
 const dashboardTitle = document.querySelector('#booking-table-title');
 
-picker.calendarContainer.style.setProperty('font-size', '.85rem');
+dateInput.addEventListener('change', (event) => {
+    console.log(event.target.value)
+    selectedDate = event.target.value.split('-').join('/')
+}) 
 
 let customer;
 let hotel;
@@ -58,7 +54,7 @@ backButton.addEventListener('click', () => {
     currentView = 'dashboard';
     roomTypeFilter = '';
     selectedDate = '';
-    picker.setDate();
+    dateInput.value = '';
     radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
@@ -103,7 +99,7 @@ availableRoomsSection.addEventListener('click', (event) => {
                     currentView = 'confirmation';
                     roomTypeFilter = '';
                     selectedDate = '';
-                    picker.setDate();
+                    dateInput.value = '';
                     renderPage(roomTypeFilter);
                     setTimeout(() => {
                         radios.forEach(radio => radio.checked = false);
