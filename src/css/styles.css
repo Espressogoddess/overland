@@ -1,3 +1,5 @@
+@import '~js-datepicker/dist/datepicker.min.css';
+
 html {
   width: 100%;
   font-family: serif;
@@ -5,6 +7,8 @@ html {
 
 :root {
   --accent-color: rgb(192, 139, 121);
+  --main-color: whitesmoke;
+  --real-white: white;
 }
 
 body {
@@ -21,6 +25,12 @@ header {
   border-bottom: slategray 1px solid;
 }
 
+.small-button {
+  height: 37px;
+  width: 100px;
+  background-color: var(--real-white);
+}
+
 button {
   height: 46px;
   width: 145px;
@@ -30,4 +40,28 @@ button {
   color: var(--accent-color);
   border-radius: 2px;
   text-transform: uppercase;
+}
+
+.hidden {
+  display: none;
+}
+
+input {
+  height: 46px;
+}
+
+.form-check {
+  width: 145px;
+}
+
+.wide-button {
+  width: 200px;
+}
+
+.white-bkgd {
+  background-color: var(--main-color);
+}
+
+.small-txt {
+  font-size: small;
 }

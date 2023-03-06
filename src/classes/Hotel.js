@@ -29,14 +29,13 @@ class Hotel {
             return filteredAvailableRooms;
         }
     }
-    addNewBooking(selectedRoom, customer, date) {
-        this.bookings.push(new Booking({
-           "id": Date.now(),
-           "userID":  customer.id,
-           "date": date,
-            "roomNumber": selectedRoom.number
-        }, this.rooms));
+    addNewBooking(booking) {
+        this.bookings.push(new Booking(booking, this.rooms));
     }
+    getSelectedRoom(roomNumber) {
+        return this.rooms.find(room => room.number === roomNumber);
+    }
+    
 }
 
 export default Hotel;
