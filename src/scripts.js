@@ -30,7 +30,7 @@ let customer;
 let hotel;
 let selectedDate;
 let currentView = 'dashboard';
-let filterTerm = '';
+let roomTypeFilter = '';
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
     .then(response => response.json());
@@ -43,33 +43,33 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
     .then(data => {
         customer = new Customer(data[0].customers[7]);
         hotel = new Hotel(data[2].rooms, data[1].bookings);
-        renderPage(filterTerm);
+        renderPage(roomTypeFilter);
     });
 
 backButton.addEventListener('click', () => {
     currentView = 'dashboard';
-    filterTerm = '';
+    roomTypeFilter = '';
     selectedDate = '';
     dateInput.value = '';
-    renderPage(filterTerm);
+    renderPage(roomTypeFilter);
 });
 
 dateForm.addEventListener('submit', (event) => {
     event.preventDefault();
     currentView = 'book';
-    renderPage(filterTerm);
+    renderPage(roomTypeFilter);
 });
 
 resetButton.addEventListener('click', () => {
     const radios = document.getElementsByName("flexRadioDefault");
     radios.forEach(radio => radio.checked = false);
-    renderPage(filterTerm);
+    renderPage(roomTypeFilter);
 });
 
 radioButtons.addEventListener('change', (event) => {
     if (event.target.value) {
-        const filterTerm = event.target.value;
-        renderPage(filterTerm);
+        const roomTypeFilter = event.target.value;
+        renderPage(roomTypeFilter);
     }
 })
 
@@ -93,29 +93,29 @@ availableRoomsSection.addEventListener('click', (event) => {
                 if (data.message.includes('success')) {
                     hotel.addNewBooking(data.newBooking);
                     currentView = 'confirmation';
-                    filterTerm = '';
+                    roomTypeFilter = '';
                     selectedDate = '';
                     dateInput.value = '';
-                    renderPage(filterTerm)
+                    renderPage(roomTypeFilter)
                 }
             })
         //add error page to try again if not
         setTimeout(() => {
             currentView = 'dashboard';
-            renderPage(filterTerm);
+            renderPage(roomTypeFilter);
         }, 4000)
     } else {
         return
     }
 });
 
-function renderPage(filterTerm) {
+function renderPage(roomTypeFilter) {
     if (currentView === 'dashboard') {
         updateView(confirmationSection, bookRoomSection, userDashboard);
         renderDashboard();
     } else if (currentView === 'book') {
         updateView(userDashboard, confirmationSection, bookRoomSection);
-        renderBookingPage(filterTerm);
+        renderBookingPage(roomTypeFilter);
     } else if (currentView === 'confirmation') {
         updateView(userDashboard, bookRoomSection, confirmationSection);
     }
@@ -136,10 +136,10 @@ function renderDashboard() {
     });
 }
 
-function renderBookingPage(filterTerm) {
+function renderBookingPage(roomTypeFilter) {
     let availableRooms;
-    if (filterTerm) {
-        availableRooms = hotel.filterByRoomType(filterTerm, selectedDate);
+    if (roomTypeFilter) {
+        availableRooms = hotel.filterByRoomType(roomTypeFilter, selectedDate);
     } else {
         availableRooms = hotel.filterByDate(selectedDate);
     }
