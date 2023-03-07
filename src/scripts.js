@@ -31,22 +31,25 @@ let selectedDate;
 let currentView = 'login';
 let roomTypeFilter = '';
 
-const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
-.then(response => response.json());
-const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
-.then(response => response.json());
-const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
-.then(response => response.json());
+function getData(customerId) {
+    const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
+    .then(response => response.json());
+    const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
+    .then(response => response.json());
+    const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
+    .then(response => response.json());
+    
+    Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
+    .then(data => {
+        customer = new Customer(data[0].customers[customerId - 1]);
+        hotel = new Hotel(data[2].rooms, data[1].bookings);
+        renderPage(roomTypeFilter);
+    })
+    .catch(error => {
+        renderErrorPage()
+    });
+}
 
-Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
-.then(data => {
-    customer = new Customer(data[0].customers[7]);
-    hotel = new Hotel(data[2].rooms, data[1].bookings);
-    renderPage(roomTypeFilter);
-})
-.catch(error => {
-    renderErrorPage()
-});
 loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     authenticateUser();
@@ -93,8 +96,10 @@ function authenticateUser() {
     const passwordInput = document.querySelector('#password');
 
     if (validNames.includes(usernameInput.value) && passwordInput.value === 'overlook2021') {
-        currentView = 'dashboard'
-        renderPage();
+        const customerId = parseInt(usernameInput.value.split('customer')[1]);
+        console.log(customerId)
+        currentView = 'dashboard';
+        getData(customerId);
     }
 }
 
