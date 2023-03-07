@@ -1,71 +1,59 @@
-## Overlook
+# Overlook
 
-### JavaScript
+## Abstract:
+I built an application that allows users to book a hotel room at the overlook hotel. The user is able to log in to the application (there are 50 different users). The user is able to see the bookings that have already been made and the total amount that has been spent. Available rooms can be seen upon selecting a data and an option room type filter. The user can book a room, which updates the bookings and total amount spent upon returning to their dashboard. The website is fully tab-able and accessible with 0 [Wave](https://wave.webaim.org/extension/) errors and a 100% rating using the LightHouse tool in Google Chrome.
 
-**Create all of your feature code files in the `src` directory.**
+## Installation Instructions:
+1. Fork and clone [this repo](https://github.com/espressoGoddess/overlook) and [this repo (backend API)](https://github.com/turingschool-examples/overlook-api).
+1. Copy the SSH key from the green "Code" button within each repo.
+1. In your terminal, use the command `git clone git@github.com:[the link to each repo]`.
+1. Run `npm install` in both local repositories.
+1. Do NOT run `npm audit fix --force` when prompted.
+1. Open the repo in your text editor to make any changes or inspect code.
+1. Run `npm start` in your terminal for both repos.
+1. Copy and paste the generated `localServer` address that your terminal provides for the front end repo into your browser address bar.
+1. Login using `overlook2021` as the password and `customer[any number from 1-50]` as the username. For example `customer34` or `customer2` are good username options.
 
-Since code is separated into multiple files, you need to use the `import` and `export` syntax to share code across file.
+## Preview of App:
+![gif app preview](./src/images/overlook.gif)
 
-Here is a video that walks through some information about [import and export](https://www.youtube.com/watch?v=_3oSWwapPKQ). There are a lot of resources out there about `import` and `export`, and resources will sometimes call them `ES6 modules`. It's something you will see in React and beyond.
+## Context:
+This solo project was completed during week 11 of 24 during Turing, a software coding bootcamp.The project took approximately 15 hours to complete.
 
-### HTML
+## Contributors:
+- [Amber Shipley](https://github.com/espressoGoddess)
 
-Add the HTML you need in the `index.html` file in the `./dist` directory. There is some boilerplate HTML that exists from the start that you can modify.
+## Learning Goals:
 
-### Images
+1. Implement ES6 classes that communicate to each other as needed.
+1. Use object and array prototype methods to perform data manipulation.
+1. Create a user interface that is easy to use and clearly displays information.
+1. Write modular, reusable code that follows SRP (Single Responsibility Principle).
+1. Implement a robust testing suite using TDD.
+1. Carry out UX workshopping and implement feedback from outside usability test.
+1. Work with a local server and make network requests to API endpoints to retrieve and manipulate data.
+1. Ensure our app follows best practices for accessibility.
+1. Solidify the code review process.
 
-Add your image files in the `src/images` directory. Similar to CSS files, you need to `import` image files in the JavaScript entry file (`scripts.js`). Then go into the HTML and add an `img` element with the `src` attribute pointing to the `images` directory. There is an example in the `index.html` file for you to see.
+## Technologies Used:
+- Fetch API
+- Webpack
+- Mocha & Chai
+- LightHouse
+- Wave Evaluation
+- GitHub Issues & Project Board
+- JavaScript
+- CSS
+- HTML
+- NPM packages
 
-## How to View Your Code in Action
-
-In the terminal, run:
-
-```bash
-npm start
-```
-
-You will see a bunch of lines output to your terminal. One of those lines will be something like:
-
-```bash
-Project is running at http://localhost:8080/
-```
-
-Go to `http://localhost:8080/` in your browser to view your code running in the browser.
-
----
-
-## Test Files Organization
-
-Similar to feature code, your test code needs to be put in a specific place for it to run successfully.
-
-**Put all of your test files in the `test` directory.** As a convention, all test filenames should end with `-test.js`. For instance: `box-test.js`.
-
-## Running Your Tests
-
-Run your test suite using the command:
-
-```bash
-npm test
-```
-
-The test results will output to the terminal.
-
----
-
-## Linting Your Code
-
-Run the command in your terminal `npm run lint` to run the linter on your JavaScript code. There will be errors and warnings right from the start in this starter kit - the linter is still running successfully.
-
-Your linter will look at the JavaScript files you have within the `src` directory and the `test` directory.
-
-## Webpack?
-
-If you look in the `package.json` file, you'll see one of the library dependencies called `webpack`. If you're interested in learning more about what Webpack is and how it works behind the scenes, take a look through the [Webpack configuration documentation](https://webpack.js.org/concepts/).
-
-## Deploying to GitHub Pages
-
-_If you are finished with the functionality and testing of your project_, then you can consider deploying your project to the web! This way anyone can play it without cloning down your repo.
-
-[GitHub Pages](https://pages.github.com/) is a great way to deploy your project to the web. Don't worry about this until your project is free of bugs and well tested!
-
-If you _are_ done, you can follow [this procedure](./gh-pages-procedure.md) to get your project live on GitHub Pages.
+## Wins + Challenges:
+- #### Wins:
+  - I successfully fetched, parsed and displayed data from 3 separate URL sources. I also posted to the API.
+  - Implemented a login page for the first time with up to 50 different usernames.
+  - Succuessfully navigating and implementing bootstrap, my first time using a CSS library.
+  
+- #### Challenges:
+  - It was challenging to implement a dynamic start date for the calendar to not allow users the ability to book dates that have passed.
+  - It was challenging to understand and utilize js-datepicker npm package to begin with. After finishing the app and running the lighthouse audit and wave tool, I found that the package was not accessible. I had to abandon this method and implement the built in date picker at the end.
+  - It was challenging to know how and when to catch errors and how to show that to do the user
