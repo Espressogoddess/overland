@@ -82,7 +82,6 @@ resetButton.addEventListener('click', () => {
 });
 
 radioButtons.addEventListener('change', (event) => {
-    console.log(event.target)
     if (event.target.value) {
     roomTypeFilter = event.target.value;
         renderPage(roomTypeFilter);
