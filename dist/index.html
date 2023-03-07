@@ -14,7 +14,7 @@
   <header>
     <div class="container mb-5 d-flex align-items-end justify-content-between">
       <h1>Overlook</h1>
-      <form id="select-a-date">
+      <form class="hidden" id="select-a-date">
         <label for="date-selection">Select A Date</label>
         <input autocomplete="off" id="date-selection" type="date" required>
         <button type="submit">Find Rooms</button>
@@ -24,18 +24,19 @@
   </header>
   <section id="login-page">
     <div class="container">
-      <div class="row mt-6">
-        <div class="col-6 offset-3">
+      <div class="row mt-5">
+        <div class="col-5 offset-3">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">please log in</h2>
               <form>
-                <label for="username">
-                  <input type="text" id="username" required placeholder="username"> username
+                <label for="username" class="d-flex flex-column">
+                  username <input type="text" id="username" required placeholder="username">
                 </label>
-                <label for="password">
-                  <input type="password" id="password" required placeholder="password"> password
+                <label for="password" class="d-flex flex-column">
+                  password <input type="password" id="password" required placeholder="password">
                 </label>
+                <button class="mt-3">log in</button>
               </form>
             </div>
           </div>
