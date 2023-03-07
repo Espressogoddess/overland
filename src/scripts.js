@@ -21,34 +21,41 @@ const dateInput = document.querySelector('#date-selection');
 const errorSection = document.querySelector('#error-page');
 const radios = document.getElementsByName("flexRadioDefault");
 const dashboardTitle = document.querySelector('#booking-table-title');
-
-dateInput.addEventListener('change', (event) => {
-    console.log(event.target.value)
-    selectedDate = event.target.value.split('-').join('/')
-}) 
+const loginSection = document.querySelector('#login-page');
+const loginForm = document.querySelector('#login-form');
+const welcomeMessage = document.querySelector('#welcome-message');
+const loginMessage = document.querySelector('#login-message');
 
 let customer;
+let customers;
 let hotel;
 let selectedDate;
-let currentView = 'dashboard';
+let currentView = 'login';
 let roomTypeFilter = '';
+let validNames;
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
-    .then(response => response.json());
+.then(response => response.json());
 const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
-    .then(response => response.json());
+.then(response => response.json());
 const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
-    .then(response => response.json());
+.then(response => response.json());
 
 Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
-    .then(data => {
-        customer = new Customer(data[0].customers[7]);
-        hotel = new Hotel(data[2].rooms, data[1].bookings);
-        renderPage(roomTypeFilter);
-    })
-    .catch(error => {
-        renderErrorPage()
-    });
+.then(data => {
+    validNames = data[0].customers.map(customer => `customer${customer.id}`)
+    customers = data[0].customers.map(customer => new Customer(customer))
+    hotel = new Hotel(data[2].rooms, data[1].bookings);
+    renderPage(roomTypeFilter);
+})
+.catch(error => {
+    renderErrorPage()
+});
+
+loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    authenticateUser();
+});
 
 backButton.addEventListener('click', () => {
     currentView = 'dashboard';
@@ -58,6 +65,10 @@ backButton.addEventListener('click', () => {
     radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
+
+dateInput.addEventListener('change', (event) => {
+    selectedDate = event.target.value.split('-').join('/')
+}) 
 
 dateForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -72,7 +83,7 @@ resetButton.addEventListener('click', () => {
 
 radioButtons.addEventListener('change', (event) => {
     if (event.target.value) {
-        const roomTypeFilter = event.target.value;
+    roomTypeFilter = event.target.value;
         renderPage(roomTypeFilter);
     }
 })
@@ -82,53 +93,74 @@ availableRoomsSection.addEventListener('click', (event) => {
         const roomNumber = parseInt(event.target.dataset.roomNumber);
         currentView = 'dashboard';
         fetch('http://localhost:3001/api/v1/bookings', {
-                method: 'POST',
-                body: JSON.stringify({
-                    "userID": customer.id,
-                    "date": selectedDate,
-                    "roomNumber": roomNumber
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message.includes('success')) {
-                    hotel.addNewBooking(data.newBooking);
-                    currentView = 'confirmation';
-                    roomTypeFilter = '';
-                    selectedDate = '';
-                    dateInput.value = '';
+            method: 'POST',
+            body: JSON.stringify({
+                "userID": customer.id,
+                "date": selectedDate,
+                "roomNumber": roomNumber
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message.includes('success')) {
+                hotel.addNewBooking(data.newBooking);
+                currentView = 'confirmation';
+                roomTypeFilter = '';
+                selectedDate = '';
+                dateInput.value = '';
+                renderPage(roomTypeFilter);
+                setTimeout(() => {
+                    radios.forEach(radio => radio.checked = false);
+                    currentView = 'dashboard';
                     renderPage(roomTypeFilter);
-                    setTimeout(() => {
-                        radios.forEach(radio => radio.checked = false);
-                        currentView = 'dashboard';
-                        renderPage(roomTypeFilter);
-                    }, 2500)
-                }
-            })
-            .catch(error => {
-                availableRoomSectionTitle.innerText = 'Oops, it looks like there was an error, please try booking again';
-            })
+                }, 2500)
+            }
+        })
+        .catch(error => {
+            availableRoomSectionTitle.innerText = 'Oops, it looks like there was an error, please try booking again';
+        })
     } else {
         return
     }
 });
 
-function renderPage(roomTypeFilter) {
+function authenticateUser() {
+    const usernameInput = document.querySelector('#username');
+    const passwordInput = document.querySelector('#password');
+    if (validNames.includes(usernameInput.value) && passwordInput.value === 'overlook2021') {
+        const customerId = parseInt(usernameInput.value.split('customer')[1]);
+        customer = customers[customerId-1]
+        currentView = 'dashboard';
+        renderPage()
+    } else if (passwordInput.value === 'overlook2021' && !validNames.includes(usernameInput.value)) {
+        loginMessage.innerText = `${usernameInput.value} is not a valid username`;
+    } else if (passwordInput.value !== 'overlook2021' && validNames.includes(usernameInput.value)) {
+        loginMessage.innerText = 'the password you entered is invalid';
+    } else {
+        loginMessage.innerText = 'bad credentials, please try again';
+    }
+}
+
+function renderPage() {
+    if (currentView === 'login') {
+        updateView(confirmationSection, bookRoomSection, userDashboard, loginSection, loginSection);
+    }
     if (currentView === 'dashboard') {
-        updateView(confirmationSection, bookRoomSection, userDashboard);
+        updateView(confirmationSection, bookRoomSection, loginSection, userDashboard, dateForm);
         renderDashboard();
     } else if (currentView === 'book') {
-        updateView(userDashboard, confirmationSection, bookRoomSection);
+        updateView(userDashboard, confirmationSection, loginSection, bookRoomSection, dateForm);
         renderBookingPage(roomTypeFilter);
     } else if (currentView === 'confirmation') {
-        updateView(userDashboard, bookRoomSection, confirmationSection);
+        updateView(userDashboard, bookRoomSection, loginSection, confirmationSection, dateForm);
     }
 }
 
 function renderDashboard() {
+    welcomeMessage.innerText = `welcome, ${customer.name}`
     const bookings = customer.getBookings(hotel)
     totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
     if (bookings && bookings.length) {
@@ -186,10 +218,12 @@ function renderBookingPage(roomTypeFilter) {
     }
 }
 
-function updateView(elementToRemove1, elementToRemove2, elementToShow) {
+function updateView(elementToRemove1, elementToRemove2, elementToRemove3, elementToShow1, elementToShow2) {
     elementToRemove1.classList.add('hidden');
     elementToRemove2.classList.add('hidden');
-    elementToShow.classList.remove('hidden');
+    elementToRemove3.classList.add('hidden');
+    elementToShow1.classList.remove('hidden');
+    elementToShow2.classList.remove('hidden');
 }
 
 function renderErrorPage() {
