@@ -27,29 +27,31 @@ const welcomeMessage = document.querySelector('#welcome-message');
 
 
 let customer;
+let customers;
 let hotel;
 let selectedDate;
 let currentView = 'login';
 let roomTypeFilter = '';
+let validNames;
 
-function getData(customerId) {
-    const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
-    .then(response => response.json());
-    const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
-    .then(response => response.json());
-    const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
-    .then(response => response.json());
-    
-    Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
-    .then(data => {
-        customer = new Customer(data[0].customers[customerId - 1]);
-        hotel = new Hotel(data[2].rooms, data[1].bookings);
-        renderPage(roomTypeFilter);
-    })
-    .catch(error => {
-        renderErrorPage()
-    });
-}
+const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
+.then(response => response.json());
+const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
+.then(response => response.json());
+const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
+.then(response => response.json());
+
+Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
+.then(data => {
+    validNames = data[0].customers.map(customer => `customer${customer.id}`)
+    customers = data[0].customers.map(customer => new Customer(customer))
+    hotel = new Hotel(data[2].rooms, data[1].bookings);
+    renderPage(roomTypeFilter);
+})
+.catch(error => {
+    renderErrorPage()
+});
+
 
 loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -86,11 +88,6 @@ radioButtons.addEventListener('change', (event) => {
         renderPage(roomTypeFilter);
     }
 })
-
-const validNames = []
-for (let n = 0; n < 51; n++) {
-  validNames.push(`customer${n}`)
-}
 
 availableRoomsSection.addEventListener('click', (event) => {
     if (event.target.dataset.roomNumber) {
@@ -137,13 +134,13 @@ function authenticateUser() {
 
     if (validNames.includes(usernameInput.value) && passwordInput.value === 'overlook2021') {
         const customerId = parseInt(usernameInput.value.split('customer')[1]);
-        console.log(customerId)
+        customer = customers[customerId-1]
         currentView = 'dashboard';
-        getData(customerId);
+        renderPage()
     }
 }
 
-function renderPage(roomTypeFilter) {
+function renderPage() {
     if (currentView === 'login') {
         updateView(confirmationSection, bookRoomSection, userDashboard, loginSection, loginSection);
     }
