@@ -22,11 +22,8 @@ const errorSection = document.querySelector('#error-page');
 const radios = document.getElementsByName("flexRadioDefault");
 const dashboardTitle = document.querySelector('#booking-table-title');
 const loginSection = document.querySelector('#login-page');
+const loginForm = document.querySelector('#login-form');
 
-dateInput.addEventListener('change', (event) => {
-    console.log(event.target.value)
-    selectedDate = event.target.value.split('-').join('/')
-}) 
 
 let customer;
 let hotel;
@@ -35,21 +32,25 @@ let currentView = 'login';
 let roomTypeFilter = '';
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
-    .then(response => response.json());
+.then(response => response.json());
 const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
-    .then(response => response.json());
+.then(response => response.json());
 const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
-    .then(response => response.json());
+.then(response => response.json());
 
 Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
-    .then(data => {
-        customer = new Customer(data[0].customers[7]);
-        hotel = new Hotel(data[2].rooms, data[1].bookings);
-        renderPage(roomTypeFilter);
-    })
-    .catch(error => {
-        renderErrorPage()
-    });
+.then(data => {
+    customer = new Customer(data[0].customers[7]);
+    hotel = new Hotel(data[2].rooms, data[1].bookings);
+    renderPage(roomTypeFilter);
+})
+.catch(error => {
+    renderErrorPage()
+});
+loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    authenticateUser();
+});
 
 backButton.addEventListener('click', () => {
     currentView = 'dashboard';
@@ -59,6 +60,10 @@ backButton.addEventListener('click', () => {
     radios.forEach(radio => radio.checked = false);
     renderPage(roomTypeFilter);
 });
+
+dateInput.addEventListener('change', (event) => {
+    selectedDate = event.target.value.split('-').join('/')
+}) 
 
 dateForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -77,6 +82,21 @@ radioButtons.addEventListener('change', (event) => {
         renderPage(roomTypeFilter);
     }
 })
+
+const validNames = []
+for (let n = 0; n < 50; n++) {
+  validNames.push(`customer${n}`)
+}
+
+function authenticateUser() {
+    const usernameInput = document.querySelector('#username');
+    const passwordInput = document.querySelector('#password');
+
+    if (validNames.includes(usernameInput.value) && passwordInput.value === 'overlook2021') {
+        currentView = 'dashboard'
+        renderPage();
+    }
+}
 
 availableRoomsSection.addEventListener('click', (event) => {
     if (event.target.dataset.roomNumber) {
