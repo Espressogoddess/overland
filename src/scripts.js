@@ -78,6 +78,7 @@ dateForm.addEventListener('submit', (event) => {
 
 resetButton.addEventListener('click', () => {
     radios.forEach(radio => radio.checked = false);
+    roomTypeFilter = '';
     renderPage(roomTypeFilter);
 });
 
