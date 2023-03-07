@@ -23,6 +23,7 @@ const radios = document.getElementsByName("flexRadioDefault");
 const dashboardTitle = document.querySelector('#booking-table-title');
 const loginSection = document.querySelector('#login-page');
 const loginForm = document.querySelector('#login-form');
+const welcomeMessage = document.querySelector('#welcome-message');
 
 
 let customer;
@@ -87,9 +88,48 @@ radioButtons.addEventListener('change', (event) => {
 })
 
 const validNames = []
-for (let n = 0; n < 50; n++) {
+for (let n = 0; n < 51; n++) {
   validNames.push(`customer${n}`)
 }
+
+availableRoomsSection.addEventListener('click', (event) => {
+    if (event.target.dataset.roomNumber) {
+        const roomNumber = parseInt(event.target.dataset.roomNumber);
+        currentView = 'dashboard';
+        fetch('http://localhost:3001/api/v1/bookings', {
+            method: 'POST',
+            body: JSON.stringify({
+                "userID": customer.id,
+                "date": selectedDate,
+                "roomNumber": roomNumber
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message.includes('success')) {
+                hotel.addNewBooking(data.newBooking);
+                currentView = 'confirmation';
+                roomTypeFilter = '';
+                selectedDate = '';
+                dateInput.value = '';
+                renderPage(roomTypeFilter);
+                setTimeout(() => {
+                    radios.forEach(radio => radio.checked = false);
+                    currentView = 'dashboard';
+                    renderPage(roomTypeFilter);
+                }, 2500)
+            }
+        })
+        .catch(error => {
+            availableRoomSectionTitle.innerText = 'Oops, it looks like there was an error, please try booking again';
+        })
+    } else {
+        return
+    }
+});
 
 function authenticateUser() {
     const usernameInput = document.querySelector('#username');
@@ -102,45 +142,6 @@ function authenticateUser() {
         getData(customerId);
     }
 }
-
-availableRoomsSection.addEventListener('click', (event) => {
-    if (event.target.dataset.roomNumber) {
-        const roomNumber = parseInt(event.target.dataset.roomNumber);
-        currentView = 'dashboard';
-        fetch('http://localhost:3001/api/v1/bookings', {
-                method: 'POST',
-                body: JSON.stringify({
-                    "userID": customer.id,
-                    "date": selectedDate,
-                    "roomNumber": roomNumber
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message.includes('success')) {
-                    hotel.addNewBooking(data.newBooking);
-                    currentView = 'confirmation';
-                    roomTypeFilter = '';
-                    selectedDate = '';
-                    dateInput.value = '';
-                    renderPage(roomTypeFilter);
-                    setTimeout(() => {
-                        radios.forEach(radio => radio.checked = false);
-                        currentView = 'dashboard';
-                        renderPage(roomTypeFilter);
-                    }, 2500)
-                }
-            })
-            .catch(error => {
-                availableRoomSectionTitle.innerText = 'Oops, it looks like there was an error, please try booking again';
-            })
-    } else {
-        return
-    }
-});
 
 function renderPage(roomTypeFilter) {
     if (currentView === 'login') {
@@ -158,6 +159,7 @@ function renderPage(roomTypeFilter) {
 }
 
 function renderDashboard() {
+    welcomeMessage.innerText = `welcome, ${customer.name}`
     const bookings = customer.getBookings(hotel)
     totalSpent.innerText = `$${customer.getTotalSpent(hotel)}`;
     if (bookings && bookings.length) {
