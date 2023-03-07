@@ -22,10 +22,31 @@
       <img src="./images/sunburst.png" class="logo" alt="sunburst">
     </div>
   </header>
+  <section id="login-page">
+    <div class="container">
+      <div class="row mt-6">
+        <div class="col-6 offset-3">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">please log in</h2>
+              <form>
+                <label for="username">
+                  <input type="text" id="username" required placeholder="username"> username
+                </label>
+                <label for="password">
+                  <input type="password" id="password" required placeholder="password"> password
+                </label>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section id="error-page" class="hidden">
     <h2>We are so sorry, There has been an error. Please try again later.</h2>
   </section>
-  <section id="user-booked-section" class="container">
+  <section id="user-booked-section" class="container hidden">
     <div class="row mt-5">
       <div class="col-3 offset-1 order-2">
         <div class="card">
@@ -105,7 +126,6 @@
       <h3 id="confirmation-title">Congrats, your booking was successful. You will be redirected back to your dashboard momentarily</h2>
     </div>
   </section>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script> -->
   <script src="bundle.js"></script>
 
 </body>
