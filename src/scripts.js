@@ -21,6 +21,7 @@ const dateInput = document.querySelector('#date-selection');
 const errorSection = document.querySelector('#error-page');
 const radios = document.getElementsByName("flexRadioDefault");
 const dashboardTitle = document.querySelector('#booking-table-title');
+const loginSection = document.querySelector('#login-page');
 
 dateInput.addEventListener('change', (event) => {
     console.log(event.target.value)
@@ -30,7 +31,7 @@ dateInput.addEventListener('change', (event) => {
 let customer;
 let hotel;
 let selectedDate;
-let currentView = 'dashboard';
+let currentView = 'login';
 let roomTypeFilter = '';
 
 const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
@@ -117,14 +118,17 @@ availableRoomsSection.addEventListener('click', (event) => {
 });
 
 function renderPage(roomTypeFilter) {
+    if (currentView === 'login') {
+        updateView(confirmationSection, bookRoomSection, userDashboard, loginSection, loginSection);
+    }
     if (currentView === 'dashboard') {
-        updateView(confirmationSection, bookRoomSection, userDashboard);
+        updateView(confirmationSection, bookRoomSection, loginSection, userDashboard, dateForm);
         renderDashboard();
     } else if (currentView === 'book') {
-        updateView(userDashboard, confirmationSection, bookRoomSection);
+        updateView(userDashboard, confirmationSection, loginSection, bookRoomSection, dateForm);
         renderBookingPage(roomTypeFilter);
     } else if (currentView === 'confirmation') {
-        updateView(userDashboard, bookRoomSection, confirmationSection);
+        updateView(userDashboard, bookRoomSection, loginSection, confirmationSection, dateForm);
     }
 }
 
@@ -186,10 +190,12 @@ function renderBookingPage(roomTypeFilter) {
     }
 }
 
-function updateView(elementToRemove1, elementToRemove2, elementToShow) {
+function updateView(elementToRemove1, elementToRemove2, elementToRemove3, elementToShow1, elementToShow2) {
     elementToRemove1.classList.add('hidden');
     elementToRemove2.classList.add('hidden');
-    elementToShow.classList.remove('hidden');
+    elementToRemove3.classList.add('hidden');
+    elementToShow1.classList.remove('hidden');
+    elementToShow2.classList.remove('hidden');
 }
 
 function renderErrorPage() {
