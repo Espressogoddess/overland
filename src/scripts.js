@@ -24,7 +24,7 @@ const dashboardTitle = document.querySelector('#booking-table-title');
 const loginSection = document.querySelector('#login-page');
 const loginForm = document.querySelector('#login-form');
 const welcomeMessage = document.querySelector('#welcome-message');
-
+const loginMessage = document.querySelector('#login-message');
 
 let customer;
 let customers;
@@ -51,7 +51,6 @@ Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
 .catch(error => {
     renderErrorPage()
 });
-
 
 loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -83,8 +82,9 @@ resetButton.addEventListener('click', () => {
 });
 
 radioButtons.addEventListener('change', (event) => {
+    console.log(event.target)
     if (event.target.value) {
-        const roomTypeFilter = event.target.value;
+    roomTypeFilter = event.target.value;
         renderPage(roomTypeFilter);
     }
 })
@@ -131,12 +131,17 @@ availableRoomsSection.addEventListener('click', (event) => {
 function authenticateUser() {
     const usernameInput = document.querySelector('#username');
     const passwordInput = document.querySelector('#password');
-
     if (validNames.includes(usernameInput.value) && passwordInput.value === 'overlook2021') {
         const customerId = parseInt(usernameInput.value.split('customer')[1]);
         customer = customers[customerId-1]
         currentView = 'dashboard';
         renderPage()
+    } else if (passwordInput.value === 'overlook2021' && !validNames.includes(usernameInput.value)) {
+        loginMessage.innerText = `${usernameInput.value} is not a valid username`;
+    } else if (passwordInput.value !== 'overlook2021' && validNames.includes(usernameInput.value)) {
+        loginMessage.innerText = 'the password you entered is invalid';
+    } else {
+        loginMessage.innerText = 'bad credentials, please try again';
     }
 }
 
