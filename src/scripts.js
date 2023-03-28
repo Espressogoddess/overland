@@ -34,11 +34,11 @@ let currentView = 'login';
 let roomTypeFilter = '';
 let validNames;
 
-const fetchCustomerData = fetch('http://localhost:3001/api/v1/customers')
+const fetchCustomerData = fetch('https://overlook-api-jfogiato.vercel.app/api/v1/customers')
 .then(response => response.json());
-const fetchBookingData = fetch('http://localhost:3001/api/v1/bookings')
+const fetchBookingData = fetch('https://overlook-api-jfogiato.vercel.app/api/v1/bookings')
 .then(response => response.json());
-const fetchRoomData = fetch('http://localhost:3001/api/v1/rooms')
+const fetchRoomData = fetch('https://overlook-api-jfogiato.vercel.app/api/v1/rooms')
 .then(response => response.json());
 
 Promise.all([fetchCustomerData, fetchBookingData, fetchRoomData])
@@ -93,7 +93,7 @@ availableRoomsSection.addEventListener('click', (event) => {
     if (event.target.dataset.roomNumber) {
         const roomNumber = parseInt(event.target.dataset.roomNumber);
         currentView = 'dashboard';
-        fetch('http://localhost:3001/api/v1/bookings', {
+        fetch('https://overlook-api-jfogiato.vercel.app/api/v1/bookings', {
             method: 'POST',
             body: JSON.stringify({
                 "userID": customer.id,
