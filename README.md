@@ -4,13 +4,13 @@
 I built an application that allows users to book a hotel room at the overlook hotel. The user is able to log in to the application (there are 50 different users). The user is able to see the bookings that have already been made and the total amount that has been spent. Available rooms can be seen upon selecting a data and an option room type filter. The user can book a room, which updates the bookings and total amount spent upon returning to their dashboard. The website is fully tab-able and accessible with 0 [Wave](https://wave.webaim.org/extension/) errors and a 100% rating using the LightHouse tool in Google Chrome.
 
 ## Installation Instructions:
-1. Fork and clone [this repo](https://github.com/espressoGoddess/overlook) and [this repo (backend API)](https://github.com/turingschool-examples/overlook-api).
+1. Fork and clone [this repo](https://github.com/espressoGoddess/overlook).
 1. Copy the SSH key from the green "Code" button within each repo.
-1. In your terminal, use the command `git clone git@github.com:[the link to each repo]`.
-1. Run `npm install` in both local repositories.
+1. In your terminal, use the command `git clone git@github.com:[the link to repo]`.
+1. Run `npm install` in the local repository.
 1. Do NOT run `npm audit fix --force` when prompted.
 1. Open the repo in your text editor to make any changes or inspect code.
-1. Run `npm start` in your terminal for both repos.
+1. Run `npm start` in your terminal.
 1. Copy and paste the generated `localServer` address that your terminal provides for the front end repo into your browser address bar.
 1. Login using `overlook2021` as the password and `customer[any number from 1-50]` as the username. For example `customer34` or `customer2` are good username options.
 
@@ -18,7 +18,7 @@ I built an application that allows users to book a hotel room at the overlook ho
 ![gif app preview](./src/images/overlook.gif)
 
 ## Context:
-This solo project was completed during week 11 of 24 during Turing, a software coding bootcamp.The project took approximately 15 hours to complete.
+This solo project took approximately 15 hours to complete.
 
 ## Contributors:
 - [Amber Shipley](https://github.com/espressoGoddess)
@@ -39,6 +39,7 @@ This solo project was completed during week 11 of 24 during Turing, a software c
 - Fetch API
 - Webpack
 - Mocha & Chai
+- Bootstrap
 - LightHouse
 - Wave Evaluation
 - GitHub Issues & Project Board
@@ -56,4 +57,4 @@ This solo project was completed during week 11 of 24 during Turing, a software c
 - #### Challenges:
   - It was challenging to implement a dynamic start date for the calendar to not allow users the ability to book dates that have passed.
   - It was challenging to understand and utilize js-datepicker npm package to begin with. After finishing the app and running the lighthouse audit and wave tool, I found that the package was not accessible. I had to abandon this method and implement the built in date picker at the end.
-  - It was challenging to know how and when to catch errors and how to show that to do the user
+  - It was challenging to know how and when to catch errors and how to show that to the user
