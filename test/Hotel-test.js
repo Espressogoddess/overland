@@ -71,9 +71,9 @@ describe('Hotel', () => {
 
     it('should be able to add new bookings', () => {
         expect(hotel.bookings).to.have.lengthOf(12);
-        hotel.addNewBooking(sampleRoomData[6], sampleCustomerData[4], "2023/04/20");
+        hotel.addNewBooking(sampleBookingData[0]);
         expect(hotel.bookings).to.have.lengthOf(13);
-        hotel.addNewBooking(sampleRoomData[6], sampleCustomerData[5], "2025/04/20");
+        hotel.addNewBooking(sampleBookingData[2]);
         expect(hotel.bookings).to.have.lengthOf(14);
     })
 
